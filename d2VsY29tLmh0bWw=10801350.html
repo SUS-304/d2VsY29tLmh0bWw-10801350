@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ironescorbion Gate - Advanced Dark Interface</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<!-- GSAP for animation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+
+<style>
+  /* RESET & BASE */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(270deg, #0d0000, #310000, #0d0000);
+    background-size: 600% 600%;
+    animation: bgGradientMove 40s ease infinite;
+    font-family: 'Orbitron', 'Share Tech Mono', monospace;
+    color: #ff0000;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @keyframes bgGradientMove {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+
+  /* CONTAINER */
+  #container {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    background-color: rgba(13, 0, 0, 0.85);
+    box-shadow:
+      inset 0 0 120px #5a0000,
+      inset 0 0 200px #a30000;
+    overflow: hidden;
+  }
+
+  /* HEADINGS */
+  h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #ff0000;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 7px #ff2a2a,
+      0 0 15px #ff3f3f,
+      0 0 30px #ff0000,
+      0 0 50px #ff0000,
+      0 0 90px #ff2a2a;
+    margin-bottom: 0.6rem;
+    user-select: none;
+  }
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: #ff5555;
+    margin-bottom: 1.8rem;
+    text-shadow:
+      0 0 8px #aa0000,
+      0 0 20px #ff0000;
+  }
+
+  /* ENCRYPTED TEXT */
+  #encrypted-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 3rem;
+    color: #ff1111;
+    letter-spacing: 0.18em;
+    margin-bottom: 2.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+    text-shadow:
+      0 0 10px #ff1a1a,
+      0 0 22px #ff0d0d,
+      0 0 40px #ff0000;
+  }
+
+  /* TIMER */
+  #timer {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 2.2rem;
+    color: #00ffff;
+    margin-bottom: 2.5rem;
+    text-shadow:
+      0 0 15px #00ffff,
+      0 0 40px #00cfcf,
+      0 0 60px #00bbbb;
+    user-select: none;
+  }
+
+  /* INPUT AREA */
+  #input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 380px;
+    max-width: 90vw;
+  }
+  #decrypt-input {
+    width: 100%;
+    padding: 18px 25px;
+    font-size: 1.5rem;
+    background-color: #330000;
+    border: 3.5px solid #ff0000;
+    border-radius: 30px;
+    color: #ff6666;
+    text-align: center;
+    letter-spacing: 0.12em;
+    font-family: 'Share Tech Mono', monospace;
+    box-shadow:
+      inset 0 0 18px #ff1a1a;
+    transition: all 0.3s ease;
+  }
+  #decrypt-input::placeholder {
+    color: #ff2222;
+  }
+  #decrypt-input:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow:
+      inset 0 0 22px #00ffff,
+      0 0 22px #00ffff;
+    color: #00ffff;
+    background-color: #110000;
+  }
+
+  #submit-btn {
+    margin-top: 30px;
+    padding: 17px 55px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(45deg, #ff0000, #a30000);
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    letter-spacing: 0.12em;
+    box-shadow:
+      0 0 20px #ff0000,
+      0 0 50px #ff0000 inset;
+    transition: all 0.4s ease;
+  }
+  #submit-btn:hover {
+    background: linear-gradient(45deg, #a30000, #ff0000);
+    box-shadow:
+      0 0 35px #ff6666,
+      0 0 70px #ff6666 inset;
+  }
+
+  /* MESSAGE */
+  #message {
+    margin-top: 25px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ff6666;
+    text-shadow:
+      0 0 7px #ff0000,
+      0 0 20px #a30000;
+    height: 45px;
+    min-height: 45px;
+    user-select: none;
+    transition: color 0.3s ease;
+  }
+
+  /* CANVAS */
+  #special-effects {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SHAKE ANIMATION */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-12px); }
+    40%, 80% { transform: translateX(12px); }
+  }
+  .shake {
+    animation: shake 0.5s;
+    border-color: #ff3333 !important;
+  }
+
+  /* FLICKER */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .flicker {
+    animation: flicker 2.8s infinite;
+  }
+
+  /* SCROLLBAR HIDDEN */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="container">
+  <h1 id="main-title" class="flicker">AWAIT THE NEXT IMAGE</h1>
+  <h2 id="subtitle">ENTER THE DECRYPTED CODE BELOW</h2>
+  <div id="encrypted-text" class="flicker">⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓</div>
+  <div id="timer">TIME LEFT: 05:00</div>
+  <div id="input-area">
+    <input id="decrypt-input" type="text" placeholder="Enter decrypted code here" autocomplete="off" spellcheck="false" />
+    <button id="submit-btn">VERIFY</button>
+    <div id="message"></div>
+  </div>
+</div>
+
+<canvas id="special-effects"></canvas>
+
+<script>
+  // -------------------------
+  // GLOBAL VARIABLES
+  // -------------------------
+  const encryptedTextEl = document.getElementById('encrypted-text');
+  const inputEl = document.getElementById('decrypt-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const messageEl = document.getElementById('message');
+  const timerEl = document.getElementById('timer');
+  const canvas = document.getElementById('special-effects');
+  const ctx = canvas.getContext('2d');
+
+  // Resize canvas to full screen
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // -------------------------
+  // ENCRYPTION / DECRYPTION
+  // -------------------------
+  // Simple XOR Cipher for demonstration
+  const key = 7;
+  const originalMessage = "WAIT FOR THE NEXT IMAGE";
+  let encryptedMessage = "";
+
+  function xorEncryptDecrypt(text, key) {
+    let res = "";
+    for(let i = 0; i < text.length; i++) {
+      res += String.fromCharCode(text.charCodeAt(i) ^ key);
+    }
+    return res;
+  }
+  encryptedMessage = xorEncryptDecrypt(originalMessage, key);
+
+  // -------------------------
+  // ANIMATE DECRYPTION REVEAL
+  // -------------------------
+  let decryptIndex = 0;
+  function animateDecryption() {
+    if(decryptIndex > originalMessage.length) return;
+    let partial = originalMessage.slice(0, decryptIndex);
+    encryptedTextEl.textContent = partial.padEnd(originalMessage.length, "⛓");
+    decryptIndex++;
+    setTimeout(animateDecryption, 130);
+  }
+
+  // Start animation after 5 seconds delay
+  setTimeout(() => {
+    decryptIndex = 0;
+    animateDecryption();
+  }, 5000);
+
+  // -------------------------
+  // TIMER COUNTDOWN 5 minutes
+  // -------------------------
+  let totalSeconds = 300;
+  let countdown;
+
+  function startCountdown() {
+    countdown = setInterval(() => {
+      totalSeconds--;
+      let min = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+      let sec = (totalSeconds % 60).toString().padStart(2, "0");
+      timerEl.textContent = `TIME LEFT: ${min}:${sec}`;
+      if(totalSeconds <= 0) {
+        clearInterval(countdown);
+        timerEl.textContent = "TIME EXPIRED!";
+        encryptedTextEl.textContent = "⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓⛓";
+        messageEl.textContent = "";
+        inputEl.disabled = true;
+        submitBtn.disabled = true;
+      }
+    }, 1000);
+  }
+  startCountdown();
+
+  // -------------------------
+  // SHAKE ANIMATION ON ERROR
+  // -------------------------
+  function triggerShake() {
+    inputEl.classList.add('shake');
+    setTimeout(() => {
+      inputEl.classList.remove('shake');
+    }, 500);
+  }
+
+  // -------------------------
+  // AUDIO FEEDBACK (success & error)
+  // -------------------------
+  function playSound(type) {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    if(type === 'success') {
+      oscillator.frequency.value = 880; // A5 tone
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.15);
+    } else if(type === 'error') {
+      oscillator.frequency.value = 220; // A3 tone
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.3);
+    }
+  }
+
+  // -------------------------
+  // VERIFY BUTTON EVENT
+  // -------------------------
+  submitBtn.addEventListener('click', () => {
+    let val = inputEl.value.trim().toUpperCase();
+    if(val === originalMessage) {
+      messageEl.style.color = "#00ff00";
+      messageEl.textContent = "✅ Verification Successful!";
+      encryptedTextEl.style.textShadow = `
+        0 0 15px #00ff00,
+        0 0 30px #00ff00,
+        0 0 45px #00ff00,
+        0 0 60px #00ff00,
+        0 0 75px #00ff00`;
+      gsap.to("#main-title", {duration: 1, scale: 1.25, repeat: 3, yoyo: true, ease: "power1.inOut"});
+      gsap.to("#container", {duration: 2, backgroundColor: "#001100", boxShadow:"inset 0 0 200px #00ff00"});
+      playSound('success');
+      clearInterval(countdown);
+      timerEl.textContent = "VERIFIED!";
+      inputEl.disabled = true;
+      submitBtn.disabled = true;
+    } else {
+      messageEl.style.color = "#ff4444";
+      messageEl.textContent = "❌ Invalid Code. Try again.";
+      triggerShake();
+      playSound('error');
+    }
+  });
+
+  // Keyboard ENTER key submits form
+  inputEl.addEventListener('keydown', e => {
+    if(e.key === 'Enter') submitBtn.click();
+  });
+
+  // -------------------------
+  // SPECIAL EFFECTS - Canvas Sparks & Glows
+  // -------------------------
+  class Spark {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.radius = Math.random() * 2 + 1.2;
+      this.color = `rgba(255,${Math.floor(Math.random()*100)},0,${Math.random()})`;
+      this.vx = (Math.random() - 0.5) * 2.4;
+      this.vy = (Math.random() - 0.5) * 2.4;
+      this.life = 40 + Math.random()*60;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.radius *= 0.93;
+      this.life--;
+    }
+    draw() {
+      ctx.beginPath();
+      let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius*5);
+      gradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
+      gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+      ctx.fillStyle = gradient;
+      ctx.shadowColor = "rgba(255, 0, 0, 0.9)";
+      ctx.shadowBlur = 22;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  let sparks = [];
+  function spawnSparks() {
+    if (sparks.length < 250) {
+      let x = Math.random() * canvas.width;
+      let y = Math.random() * canvas.height;
+      sparks.push(new Spark(x, y));
+    }
+  }
+
+  function animateSparks() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    sparks.forEach((spark, i) => {
+      spark.update();
+      spark.draw();
+      if (spark.life <= 0 || spark.radius <= 0.1) sparks.splice(i, 1);
+    });
+    spawnSparks();
+    requestAnimationFrame(animateSparks);
+  }
+  animateSparks();
+
+</script>
+
+</body>
+</html>
